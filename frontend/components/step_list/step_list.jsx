@@ -8,7 +8,7 @@ export default class StepList extends React.Component{
   }
   
   render(){
-    const { steps, receiveStep } = this.props;
+    const { steps, createStep } = this.props;
     let stepListItemContainers = steps.map(step => (
       <StepListItemContainer 
         key={`step-list-item-container${step.id}}`}
@@ -20,7 +20,7 @@ export default class StepList extends React.Component{
         <ul>
           {stepListItemContainers}
         </ul>
-        <StepForm receiveStep={receiveStep} todo_id={this.props.todo_id}/>
+        <StepForm createStep={createStep} todo_id={this.props.todo_id}/>
       </div>
     )
   }

@@ -9,18 +9,18 @@ export default class StepListItem extends React.Component{
   }
 
   toggleStep(e){
-    const { step, receiveStep } = this.props;
+    const { step, updateStep } = this.props;
     const newStep = merge({}, step, {done: !step.done})
-    receiveStep(newStep);
+    updateStep(newStep);
   }
   
   render(){
-    const { step, removeStep, receiveStep } = this.props;
+    const { step, deleteStep } = this.props;
     return(
       <li>
         <p className="step-title">{ step.title }</p>
         <p className="step-body">{ step.body }</p>
-        <button onClick={removeStep}>Remove Step</button>
+        <button onClick={deleteStep}>Remove Step</button>
         <button onClick={this.toggleStep}>{step.done ? 'Undo' : 'Done'}</button>
       </li>
     )

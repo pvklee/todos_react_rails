@@ -1,5 +1,4 @@
 import React from 'react';
-import { uniqueId } from '../../util/util'
 
 export default class StepForm extends React.Component {
   constructor(props) {
@@ -20,12 +19,13 @@ export default class StepForm extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault();
-    const step = Object.assign({}, this.state, { id: uniqueId() });
-    this.props.receiveStep(step);
-    this.setState({
-      title: "",
-      body: ""
-    })
+    const step = Object.assign({}, this.state);
+    this.props.createStep( {step} ).then(
+      ()=>this.setState({
+        title: "",
+        body: ""
+      })
+    );
   }
 
   render() {
@@ -53,7 +53,7 @@ export default class StepForm extends React.Component {
             required>
           </textarea>
         </label>
-        <button className="create-button">Create Todo!</button>
+        <button className="create-button">Create Step!</button>
       </form>
     )
   }

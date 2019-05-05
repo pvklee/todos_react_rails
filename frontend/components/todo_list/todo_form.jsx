@@ -1,35 +1,56 @@
 import React from 'react';
-import { uniqueId } from '../../util/util';
 import ErrorList from './error_list';
 
-export default class TodoForm extends React.Component{
+export default class TodoForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       title: '',
       body: '',
-      done: false
+      done: false,
+      tag_names: [],
+      newTag: ''
     };
+    this.currentTagInputValue;
     this.handleSubmit = this.handleSubmit.bind(this);
     this.update = this.update.bind(this);
+    this.addTag = this.addTag.bind(this);
   }
 
-  update(property){
-    return e => this.setState({[property]: e.target.value})
+  update(property) {
+    return e => this.setState({ [property]: e.target.value })
   }
 
-  handleSubmit(e){
-    e.preventDefault();
-    const todo = Object.assign({}, this.state, { id: uniqueId() });
-    this.props.createTodo({todo}).then(()=>{
-        this.setState({title: '', body: ''});
+  addTag(e) {
+    this.setState({
+      tag_names: [...this.state.tag_names, this.state.newTag],
+      newTag: ''
     });
   }
 
-  render(){
-    return(
+  removeTag(idx) {
+    this.setState({
+      tag_names: this.state.tag_names.filter((_, index) => index !== idx)
+    });
+  }
+
+  handleSubmit(e) {
+    e.preventDefault();
+    const todo = Object.assign({}, this.state);
+    this.props.createTodo({ todo }).then(() => {
+      this.setState({ title: '', body: '', tag_names: [], newTag: '' });
+    });
+  }
+
+  render() {
+    const tagsList = this.state.tag_names.map((tag, idx) => {
+      const clickHandler = () => this.removeTag(idx);
+      return <li key={idx} onClick={clickHandler}>{tag} </li>
+    })
+
+    return (
       <form className="todo-form" onSubmit={this.handleSubmit}>
-        <ErrorList errors={ this.props.errors } />
+        <ErrorList errors={this.props.errors} />
         <label>Title:
           <input
             className="input"
@@ -52,6 +73,16 @@ export default class TodoForm extends React.Component{
             required>
           </textarea>
         </label>
+        <label>Add tag:
+          <input
+            className="input"
+            onChange={this.update('newTag')}
+            value={this.state.newTag}
+            placeholder="errands">
+          </input>
+          <button onClick={this.addTag} type="button">Add Tag</button>
+        </label>
+        <ul className="tags-list">{tagsList}</ul>
         <button className="create-button">Create Todo!</button>
       </form>
     )

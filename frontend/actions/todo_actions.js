@@ -28,7 +28,7 @@ export const todoError = error =>({
 
 //async
 
-export const fetchTodos = () => dispatch => (
+export const requestTodos = () => dispatch => (
   APIUtil.fetchTodos().then(todos => dispatch(receiveTodos(todos)))
 )
 
@@ -44,6 +44,14 @@ export const updateTodo = (todo) => dispatch => (
   APIUtil.updateTodo(todo)
     .then(
       todo => {dispatch(receiveTodo(todo)); dispatch(clearErrors())},
+      err => dispatch(receiveErrors(err.responseJSON))
+    )
+)
+
+export const deleteTodo = (todo) => dispatch => (
+  APIUtil.deleteTodo(todo)
+    .then(
+      todo => {dispatch(removeTodo(todo))},
       err => dispatch(receiveErrors(err.responseJSON))
     )
 )
